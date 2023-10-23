@@ -6,26 +6,14 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDCbKbDbgl9Qby9qmBuIy7j1d1jA1sC664",
-  authDomain: "blog-new-911fc.firebaseapp.com",
-  projectId: "blog-new-911fc",
-  storageBucket: "blog-new-911fc.appspot.com",
-  messagingSenderId: "1062228625402",
-  appId: "1:1062228625402:web:82462e5cf2c899a833c643"
+  apiKey: "AIzaSyC2f8wumoRL3gy_NC93kta7TF5NKzJjilU",
+  authDomain: "blogging-app-93363.firebaseapp.com",
+  projectId: "blogging-app-93363",
+  storageBucket: "blogging-app-93363.appspot.com",
+  messagingSenderId: "948527027511",
+  appId: "1:948527027511:web:b581fc35dd91cac4a3b6b2"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Cloud Firestore and get a reference to the service
-//Export the reference to be used in other files
 export const db = getFirestore(app);
-
-/**const firebaseConfig = {
-  apiKey: "*********************************",
-  authDomain: "*******************************",
-  projectId: "***********************",
-  storageBucket: "******************************",
-  messagingSenderId: "******************",
-  appId: "************************"
-}; */
