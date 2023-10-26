@@ -3,12 +3,14 @@ import { useState, useRef, useEffect } from "react";
 
 //Import fireStore reference from frebaseInit file
 import { db } from "../firebase-init";
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs, onSnapshot, deleteDoc } from "firebase/firestore";
 
 export default function Blog() {
 
     const [formData, setformData] = useState({ title: "", content: "" })
     const [blogs, setBlogs] = useState([]);
+
+
 
     const titleRef = useRef(null);
 
@@ -16,14 +18,27 @@ export default function Blog() {
         titleRef.current.focus()
     }, []);
 
+    useEffect(() => {
+        const unsub = onSnapshot(collection(db, "blogs"), (Snapshot) => {
+            const blogData = Snapshot.docs.map((doc) => {
+                return {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            });
+            setBlogs(blogData);
+        });
+    }, []);
+
     async function handleSubmit(e) {
         e.preventDefault();
         titleRef.current.focus();
 
-        setBlogs([{ title: formData.title, content: formData.content }, ...blogs]);
+        // setBlogs([{ title: formData.title, content: formData.content }, ...blogs]);
 
         const docRef = doc(collection(db, "blogs"));
         // addDoc -> used to add when creating id ourself(it will add and not check if id already present), setDoc -> when automatic id generated(check if same id presents)
+
         await setDoc(docRef, {
             title: formData.title,
             content: formData.content,
@@ -33,9 +48,12 @@ export default function Blog() {
         setformData({ title: "", content: "" });
     }
 
-    async function removeBlog(i) {
+    async function removeBlog(id) {
 
-        setBlogs(blogs.filter((blog, index) => index !== i));
+        const docRef = doc(db, "blogs", id);
+        deleteDoc(docRef);
+
+        // setBlogs(blogs.filter((blog, index) => index !== i));
 
     }
 
@@ -73,7 +91,7 @@ export default function Blog() {
 
             {/* Section where submitted blogs will be displayed */}
             <h2> Blogs </h2>
-            {blogs.map((blog, i) => (
+            {blogs.slice().reverse().map((blog, i) => (
                 <div className="blog" key={i}>
                     <h3>{blog.title}</h3>
                     <hr />
@@ -81,7 +99,7 @@ export default function Blog() {
 
                     <div className="blog-btn">
                         <button onClick={() => {
-                            removeBlog(i)
+                            removeBlog(blog.id)
                         }}
                             className="btn remove">
 
